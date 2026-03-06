@@ -54,4 +54,4 @@ $winutilsUri = ghUrlRaw $WinUtilsPath
 $winutilsFileName = [IO.Path]::GetFileName($WinUtilsPath)
 $winutilsFilePath = Join-Path ([IO.Path]::GetTempPath()) $winutilsFileName
 Invoke-RestMethod $winutilsUri -OutFile $winutilsFilePath
-& ([ScriptBlock]::Create((irm "https://christitus.com/win"))) -Config $winutilsFilePath -Run
+Start-Process $ps -ArgumentList "-Command", "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) -Config '$winutilsFilePath' -Run" -Wait
