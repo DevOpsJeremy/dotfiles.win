@@ -45,4 +45,4 @@ $packagesUri = ghUrlRaw $PackagesPath
 $packagesFileName = [IO.Path]::GetFileName($PackagesPath)
 $packagesFilePath = Join-Path ([IO.Path]::GetTempPath()) $packagesFileName
 Invoke-RestMethod $packagesUri -OutFile $packagesFilePath
-choco install $packagesFilePath
+choco install -y $packagesFilePath
