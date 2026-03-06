@@ -33,6 +33,7 @@ $isAdmin = checkAdmin
 $ps = (Get-Command powershell).Source
 if (-not $isAdmin) {
     Start-Process $ps -ArgumentList "-Command", "Invoke-RestMethod '$scriptUri' | Invoke-Expression"
+    return
 }
 
 # Install Chocolatey if not already
