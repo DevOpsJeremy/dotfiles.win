@@ -25,14 +25,15 @@ function ghUrlRaw {
 }
 #endregion Functions
 
-$scriptUri = ghUrlRaw $ScriptPath
+# PowerShell executable
+$ps = (Get-Command powershell).Source
 
 # Check if admin
 $isAdmin = checkAdmin
 
-$ps = (Get-Command powershell).Source
+$scriptUri = ghUrlRaw $ScriptPath
 if (-not $isAdmin) {
-    Start-Process $ps -ArgumentList "-Command", "Invoke-RestMethod '$scriptUri' | Invoke-Expression"
+    Start-Process $ps -ArgumentList "-Command", "Invoke-RestMethod '$scriptUri' | Invoke-Expression" -Verb RunAs
     return
 }
 
