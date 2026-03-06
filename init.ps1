@@ -9,11 +9,6 @@ $winPrincipal = [System.Security.Principal.WindowsPrincipal]::new($winId)
 $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
 $isAdmin = $winPrincipal.IsInRole($adminRole)
 
-if (-not ) {
-    $ps = (Get-Command powershell).Source
-    Start-Process $ps -ArgumentList "-NoExit", "-Command", "Invoke-RestMethod '$ScriptPath' | Invoke-Expression" -Verb RunAs
-}
-
 # Install Chocolatey if not already
 try {
     Get-Command choco -ErrorAction Stop | Out-Null
