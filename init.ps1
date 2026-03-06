@@ -4,6 +4,7 @@ param (
     $Branch = "init",
     $ScriptPath = "init.ps1",
     $PackagesPath = "packages.config",
+    $WinUtilsPath = "winutils.config.json",
     $ChocoInstallUri = "https://community.chocolatey.org/install.ps1"
 )
 #region Functions
@@ -41,8 +42,15 @@ try {
     Invoke-RestMethod $ChocoInstallUri | Invoke-Expression
 }
 
+# Install Chocolatey packages
 $packagesUri = ghUrlRaw $PackagesPath
 $packagesFileName = [IO.Path]::GetFileName($PackagesPath)
 $packagesFilePath = Join-Path ([IO.Path]::GetTempPath()) $packagesFileName
 Invoke-RestMethod $packagesUri -OutFile $packagesFilePath
 choco install -y $packagesFilePath
+
+# Configure Windows tweaks
+$winutilsUri = ghUrlRaw $WinUtilsPath
+$winutilsFileName = [IO.Path]::GetFileName($WinUtilsPath)
+$winutilsFilePath = Join-Path ([IO.Path]::GetTempPath()) $winutilsFileName
+& ([ScriptBlock]::Create((irm "https://christitus.com/win"))) -Config $winutilsFilePath -Run
