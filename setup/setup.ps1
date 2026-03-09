@@ -17,6 +17,8 @@ if (-not (checkAdmin)) {
     exit 1
 }
 
+Set-Location ([IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Source))
+
 # PowerShell executable
 $ps = (Get-Command powershell).Source
 
