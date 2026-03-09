@@ -37,8 +37,8 @@ function getRepo {
     }
     Process {
         Invoke-RestMethod $url -OutFile $tmpFile
-        Expand-Archive $tmpFile -DestinationPath $destDir
-        return Rename-Item $repoDestPath $destName -PassThru
+        Expand-Archive $tmpFile -DestinationPath $destDir -Force
+        return Rename-Item $repoDestPath $destName -PassThru -Force
     }
     End {
         Remove-Item $tmpFile -ErrorAction SilentlyContinue -Force
