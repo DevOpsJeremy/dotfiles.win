@@ -1,0 +1,28 @@
+param (
+    $PackagesPath = "packages.config",
+    $WinUtilsPath = "winutils.config.json",
+    $ChocoInstallUri = "https://community.chocolatey.org/install.ps1"
+)
+#region Functions
+#endregion Functions
+
+if (-not (checkAdmin)) {
+    throw "Script must be ran as admin"
+}
+
+# PowerShell executable
+$ps = (Get-Command powershell).Source
+
+# Install Chocolatey if not already
+try {
+    Get-Command choco -ErrorAction Stop | Out-Null
+} catch {
+    Invoke-RestMethod $ChocoInstallUri | Invoke-Expression
+}
+
+# Install Chocolatey packages
+choco install -y $PackagesPath
+
+# Configure Windows tweaks
+# This script takes control of the console, so launch in a new window
+Start-Process $ps -ArgumentList "-Command", "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) -Config '$((Resolve-Path $WinUtilsPath).Path)' -Run -Noui" -Wait
