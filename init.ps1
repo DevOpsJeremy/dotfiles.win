@@ -6,12 +6,6 @@ param (
     $ScriptPath = "setup/setup.ps1"
 )
 #region Functions
-function checkAdmin {
-    $winId = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $winPrincipal = [System.Security.Principal.WindowsPrincipal]::new($winId)
-    $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-    return $winPrincipal.IsInRole($adminRole)
-}
 function ghUrlZip {
     param (
         $uriHost = "https://github.com",
