@@ -34,4 +34,4 @@ choco install -y $PackagesPath
 
 # Configure Windows tweaks
 # This script takes control of the console, so launch in a new window
-Start-Process $ps -ArgumentList "-Command", "& ([ScriptBlock]::Create((irm 'https://christitus.com/win'))) -Config '$((Resolve-Path $WinUtilsPath).Path)' -Run -Noui" -Wait
+Start-Process $ps -ArgumentList "-Command", "& ([ScriptBlock]::Create((Invoke-RestMethod 'https://christitus.com/win'))) -Config '$((Resolve-Path $WinUtilsPath).Path)' -Run -Noui" -Wait
