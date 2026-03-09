@@ -53,4 +53,4 @@ $repoPath = getRepo
 $ps = (Get-Command powershell).Source
 
 $scriptPathFull = Join-Path $repoPath $ScriptPath
-Start-Process $ps -ArgumentList "-File", "$scriptPathFull" -Verb RunAs
+Start-Process $ps -ArgumentList "-File", "$scriptPathFull", "-NoExit" -Verb RunAs
