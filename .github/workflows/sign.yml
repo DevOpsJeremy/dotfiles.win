@@ -5,4 +5,9 @@ jobs:
   sign:
     runs-on: ubuntu-latest
     steps:
-      - run: openssl
+      - name: Get certificate
+        run: >
+          openssl req -x509 -newkey ed25519 -days 365 
+            -noenc -keyout example.com.key -out example.com.crt 
+            -subj "/CN=example.com" 
+            -addext "subjectAltName=DNS:example.com,DNS:*.example.com,IP:10.0.0.1"
