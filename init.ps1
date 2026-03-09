@@ -1,7 +1,7 @@
 param (
     $Owner = "DevOpsJeremy",
     $Repo = "dotfiles.win",
-    $LocalRepoName = "init",
+    $LocalRepoRoot = "$env:USERPROFILE/repos",
     $Branch = "init",
     $ScriptPath = "setup/setup.ps1"
 )
@@ -18,7 +18,7 @@ function ghUrlZip {
 function getRepo {
     param (
         $outDir = $PWD.Path,
-        $destName = $script:LocalRepoName,
+        $destName = $(Join-Path $script:LocalRepoRoot $Repo),
         $r = $script:Repo,
         $b = $script:Branch
     )
@@ -38,7 +38,7 @@ function getRepo {
     Process {
         Invoke-RestMethod $url -OutFile $tmpFile
         Expand-Archive $tmpFile -DestinationPath $destDir -Force
-        return Rename-Item $repoDestPath $destName -PassThru -Force
+        return Move-Item $repoDestPath $destName -PassThru -Force
     }
     End {
         Remove-Item $tmpFile -ErrorAction SilentlyContinue -Force
