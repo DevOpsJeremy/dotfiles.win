@@ -1,0 +1,19 @@
+on:
+  push:
+
+jobs:
+  pack:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ./setup
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install choco
+        run: Invoke-RestMethod $ChocoInstallUri | Invoke-Expression
+      - run: |
+          Get-ChildItem -Path ./packages -Filter *.nuspec -Recurse -File |
+            ForEach-Object {
+              choco pack $_.FullName
+            }
