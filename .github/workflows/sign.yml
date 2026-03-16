@@ -6,8 +6,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6
-      - run: |
+      - name: Install choco
+        run: |
           get-location
           get-childitem
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         working-directory: setup
         shell: pwsh
