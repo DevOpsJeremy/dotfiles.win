@@ -22,8 +22,6 @@ jobs:
         run: |
           Get-ChildItem *.nupkg |
             ForEach-Object {
-              $name = $_.Name -replace '(.+)\.\d+\.\d+\.\d+(-[^.]+)?\.nupkg', '$2'
-              $_.Name -replace '(.+)\.\d+\.\d+\.\d+(-[^.]+)?\.nupkg', '$2'
-              $_.Name -replace '(.+)\.\d+\.\d+\.\d+(-[^.]+)?\.nupkg', '$1'
-              echo "choco install $name --source ."
+              $name = $_.Name -replace '(.+)\.\d+\.\d+\.\d+(-[^.]+)?\.nupkg', '$1'
+              choco install $name --source .
             }
