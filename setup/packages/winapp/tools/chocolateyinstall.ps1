@@ -7,7 +7,7 @@ $packageArgs = @{
   file         = $fileLocation
 
   softwareName  = 'winapp'
-  silentArgs    = "install --force --accept-source-agreements --disable-interactivity --silent --accept-package-agreements `"Windows App`" --source winget"
+  silentArgs    = "install --force --accept-source-agreements --disable-interactivity --silent --accept-package-agreements `"Windows App`" --source winget --version $env:ChocolateyPackageVersion"
 
   validExitCodes= @(0)
 }
