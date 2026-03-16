@@ -18,4 +18,10 @@ jobs:
             ForEach-Object {
               choco pack $_.FullName
             }
-      - run: ls
+      - name: Choco install
+        run: |
+          Get-ChildItem *.nupkg |
+            ForEach-Object {
+              $name = $_.Name -replace '(.+)\.\d+\.\d+\.\d+(-[^.]+)?\.nupkg', '$2'
+              choco install $name --source .
+            }
