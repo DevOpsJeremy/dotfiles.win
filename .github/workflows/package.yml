@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Install choco
-        run: Invoke-RestMethod $ChocoInstallUri | Invoke-Expression
+        run: Invoke-RestMethod "https://community.chocolatey.org/install.ps1" | Invoke-Expression
       - run: |
           Get-ChildItem -Path ./packages -Filter *.nuspec -Recurse -File |
             ForEach-Object {
