@@ -10,6 +10,16 @@ function checkAdmin {
     $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
     return $winPrincipal.IsInRole($adminRole)
 }
+function packChoco {
+    param (
+        $PackagesPath = "$($PWD.Path)/packages",
+        $OutputDirectory = $PWD.Path
+    )
+    Get-ChildItem -Path $PackagesPath -Filter "*.nuspec" -File -Recurse |
+        ForEach-Object {
+            choco pack "$($_.FullName)" --outputdirectory "$OutputDirectory"
+        }
+}
 #endregion Functions
 
 if (-not (checkAdmin)) {

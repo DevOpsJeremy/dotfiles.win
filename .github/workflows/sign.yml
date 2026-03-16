@@ -2,12 +2,12 @@ on:
   push:
 
 jobs:
-  sign:
-    runs-on: ubuntu-latest
+  pack:
+    runs-on: windows-latest
     steps:
-      - name: Get certificate
-        run: >
-          openssl req -x509 -newkey ed25519 -days 365 
-            -noenc -keyout example.com.key -out example.com.crt 
-            -subj "/CN=example.com" 
-            -addext "subjectAltName=DNS:example.com,DNS:*.example.com,IP:10.0.0.1"
+      - uses: actions/checkout@v6
+      - run: |
+          get-location
+          get-childitem
+        working-directory: setup
+        shell: pwsh
