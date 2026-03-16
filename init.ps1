@@ -1,3 +1,10 @@
+<#
+    .EXAMPLE
+        Invoke-RestMethod "https://raw.githubusercontent.com/DevOpsJeremy/dotfiles.win/refs/heads/main/init.ps1" | Invoke-Expression
+
+    .EXAMPLE
+        irm "https://raw.githubusercontent.com/DevOpsJeremy/dotfiles.win/refs/heads/main/init.ps1" | iex
+#>
 param (
     $Owner = "DevOpsJeremy",
     $Repo = "dotfiles.win",
