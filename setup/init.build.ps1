@@ -1,9 +1,9 @@
 param (
-    $ChocoPackagesPath = (Resolve-Path "setup/packages.config").Path,
+    $ChocoPackagesPath = (Resolve-Path "packages.config").Path,
     $ChocoInstallUri = "https://community.chocolatey.org/install.ps1",
     $ChocoOutputDir = $PSScriptRoot,
-    $ChocoPackagesDir = (Resolve-Path "setup/packages").Path,
-    $WinUtilsPath = (Resolve-Path "setup/winutils.config.json").Path,
+    $ChocoPackagesDir = (Resolve-Path "packages").Path,
+    $WinUtilsConfig = (Resolve-Path "winutils.config.json").Path,
     $WinUtilsUri = "https://christitus.com/win"
 )
 
@@ -17,12 +17,15 @@ task install-chocolatey {
 }
 
 task winutils {
-    # PowerShell executable
-    $ps = (Get-Command powershell).Source
-
     # Configure Windows tweaks
-    # This script takes control of the console, so launch in a new window
-    Start-Process $ps -ArgumentList "-Command", "& ([ScriptBlock]::Create((Invoke-RestMethod $WinUtilsUri))) -Config '$((Resolve-Path $WinUtilsPath).Path)' -Run -Noui" -Wait
+    # This script takes control of the console, so launch in a new instance
+    [powershell]::Create().AddScript((
+        Invoke-RestMethod $WinUtilsUri
+    )).AddParameters(@{
+        Config  = $WinUtilsConfig
+        Run     = $true
+        Noui    = $true
+    }).Invoke()
 }
 
 task choco-pack {
