@@ -1,9 +1,9 @@
 param (
-    $ChocoPackagesPath = (Resolve-Path "packages.config").Path,
+    $ChocoPackagesPath = (Join-Path $PSScriptRoot "packages.config"),
     $ChocoInstallUri = "https://community.chocolatey.org/install.ps1",
     $ChocoOutputDir = $PSScriptRoot,
-    $ChocoPackagesDir = (Resolve-Path "packages").Path,
-    $WinUtilsConfig = (Resolve-Path "winutils.config.json").Path,
+    $ChocoPackagesDir = (Join-Path $PSScriptRoot "packages"),
+    $WinUtilsConfig = (Join-Path $PSScriptRoot "winutils.config.json"),
     $WinUtilsUri = "https://christitus.com/win"
 )
 
@@ -40,7 +40,6 @@ task choco-install {
     choco install -y $ChocoPackagesPath
 }
 
-task setup {
-    echo "hello world"
-    $ChocoPackagesPath
-}
+task choco-build choco-pack, choco-install
+
+task init install-chocolatey, choco-build, winutils
