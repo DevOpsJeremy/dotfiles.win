@@ -10,7 +10,8 @@ param (
     $Repo = "dotfiles.win",
     $LocalRepoRoot = "$env:USERPROFILE/repos",
     $Branch = "init",
-    $ScriptPath = "setup/setup.ps1"
+    $ScriptPath = "setup/setup.ps1",
+    [switch] $Force
 )
 #region Functions
 function ghUrlZip {
@@ -49,6 +50,10 @@ function getRepo {
     }
 }
 function getRepoCheck {
+    param (
+        [switch] $Force
+    )
+
     $localRepoPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath((Join-Path $script:LocalRepoRoot $script:Repo))
 
     # If repo path exists and is a file, fail
@@ -59,17 +64,19 @@ function getRepoCheck {
 
     # If repo directory exists, prompt user before deleting and recreating
     if (Test-Path $localRepoPath) {
-        $no = 1
-        $answer = $Host.UI.PromptForChoice(
-            "Rebuild local repo?", # Caption
-            "The '$localRepoPath' directory exists. Recreate?", # Message
-            @('&Yes', '&No'), # Choices
-            $no # Default: No
-        )
+        if (-not $Force) {
+            $no = 1
+            $answer = $Host.UI.PromptForChoice(
+                "Rebuild local repo?", # Caption
+                "The '$localRepoPath' directory exists. Recreate?", # Message
+                @('&Yes', '&No'), # Choices
+                $no # Default: No
+            )
 
-        if ($answer -eq $no) {
-            Write-Host "Exiting."
-            exit
+            if ($answer -eq $no) {
+                Write-Host "Exiting."
+                exit
+            }
         }
 
         Remove-Item $localRepoPath -Force -Recurse
@@ -80,7 +87,7 @@ function getRepoCheck {
 #endregion Functions
 
 # Download the repo
-$repoPath = getRepoCheck
+$repoPath = getRepoCheck -Force:$Force
 
 # PowerShell executable
 $ps = (Get-Command powershell).Source
