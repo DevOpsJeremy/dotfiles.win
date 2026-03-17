@@ -28,4 +28,4 @@ Set-Location $root
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module InvokeBuild -Scope AllUsers
 
-Invoke-Build init
+Invoke-Build setup

@@ -42,4 +42,4 @@ task choco-install {
 
 task choco-build choco-pack, choco-install
 
-task init install-chocolatey, choco-build, winutils
+task setup install-chocolatey, choco-build, winutils
