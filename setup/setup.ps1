@@ -27,7 +27,13 @@ if (-not (checkAdmin)) {
     exit 1
 }
 
-Set-Location ([IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Source))
+$root = Resolve-Path "$($MyInvocation.MyCommand.Source)/../.."
+Set-Location $root
+
+Set-PSRepository PSGallery -InstallationPolicy Trusted
+Install-Module InvokeBuild -Scope AllUsers
+
+Invoke-Build setup
 
 # PowerShell executable
 $ps = (Get-Command powershell).Source
