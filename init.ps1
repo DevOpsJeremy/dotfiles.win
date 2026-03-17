@@ -79,7 +79,6 @@ function getRepoCheck {
 }
 #endregion Functions
 
-
 # Download the repo
 $repoPath = getRepoCheck
 
