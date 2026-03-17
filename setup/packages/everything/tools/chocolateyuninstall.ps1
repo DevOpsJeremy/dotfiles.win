@@ -1,14 +1,10 @@
-$fileLocation = (Get-Command winget).Source | Select -First 1
-
 $ErrorActionPreference = 'Stop'
-
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   softwareName  = 'everything'
-
-  file         = $fileLocation
-  silentArgs    = "uninstall --silent --force --purge --disable-interactivity `"Windows App`""
-  validExitCodes= @(0)
+  fileType      = 'msi'
+  silentArgs    = "/qn /norestart"
+  validExitCodes= @(0, 3010, 1605, 1614, 1641) # https://msdn.microsoft.com/en-us/library/aa376931(v=vs.85).aspx
 }
 
 Uninstall-ChocolateyPackage @packageArgs
