@@ -48,36 +48,40 @@ function getRepo {
         Remove-Item $destDir -ErrorAction SilentlyContinue -Recurse -Force
     }
 }
-#endregion Functions
+function getRepoCheck {
+    $localRepoPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath((Join-Path $script:LocalRepoRoot $script:Repo))
 
-$localRepoPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath((Join-Path $LocalRepoRoot $Repo))
-
-# If repo path exists and is a file, fail
-if (Test-Path $localRepoPath -PathType Leaf) {
-    throw "The path '$localRepoPath' exists and is not a directory"
-    exit 1
-}
-
-# If repo directory exists, prompt user before deleting and recreating
-if (Test-Path $localRepoPath) {
-    $no = 1
-    $answer = $Host.UI.PromptForChoice(
-        "Rebuild local repo?", # Caption
-        "The '$localRepoPath' directory exists. Recreate?", # Message
-        @('&Yes', '&No'), # Choices
-        $no # Default: No
-    )
-
-    if ($answer -eq $no) {
-        Write-Host "Exiting."
-        exit
+    # If repo path exists and is a file, fail
+    if (Test-Path $localRepoPath -PathType Leaf) {
+        throw "The path '$localRepoPath' exists and is not a directory"
+        exit 1
     }
 
-    Remove-Item $localRepoPath -Force -Recurse
+    # If repo directory exists, prompt user before deleting and recreating
+    if (Test-Path $localRepoPath) {
+        $no = 1
+        $answer = $Host.UI.PromptForChoice(
+            "Rebuild local repo?", # Caption
+            "The '$localRepoPath' directory exists. Recreate?", # Message
+            @('&Yes', '&No'), # Choices
+            $no # Default: No
+        )
+
+        if ($answer -eq $no) {
+            Write-Host "Exiting."
+            exit
+        }
+
+        Remove-Item $localRepoPath -Force -Recurse
+    }
+
+    return getRepo
 }
+#endregion Functions
+
 
 # Download the repo
-$repoPath = getRepo
+$repoPath = getRepoCheck
 
 # PowerShell executable
 $ps = (Get-Command powershell).Source
