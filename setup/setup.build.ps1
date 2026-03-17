@@ -7,6 +7,62 @@ param (
     $WinUtilsUri = "https://christitus.com/win"
 )
 
+function chocoPack {
+    param (
+        $Root,
+        $OutputDirectory,
+        [switch] $Parallel,
+        [int] $MaxRunspaces = 5
+    )
+    Begin {
+        $rsp = [runspacefactory]::CreateRunspacePool()
+        $rsp.SetMaxRunspaces($MaxRunspaces) | Out-Null
+        $rsp.Open()
+        $outList = [System.Collections.ArrayList]::new()
+        $psInstances = [System.Collections.ArrayList]::new()
+    }
+    Process {
+        Get-ChildItem -Path $Root -Filter "*.nuspec" -File -Recurse |
+            ForEach-Object {
+                $ps = [powershell]::Create().
+                    AddCommand("choco").
+                    AddArgument("pack").
+                    AddArgument($_.FullName)
+
+                if ($OutputDirectory) {
+                    $ps = $ps.
+                        AddArgument('--output').
+                        AddArgument($outputDir)
+                }
+
+                $ps.RunspacePool = $rsp
+                if ($Parallel) {
+                    $outList.Add($ps.BeginInvoke()) | Out-Null
+                    $psInstances.Add($ps) | Out-Null
+                } else {
+                    $ps.Invoke()
+                }
+            }
+        
+        if (-not $Parallel) { return }
+
+        do { Start-Sleep -Milliseconds 100 }
+        while ($outList.IsCompleted -contains $false)
+
+        for ($i = 0; $i -lt $outList.Count; $i++) {
+            $handle = $outList[$i]
+            $ps     = $psInstances[$i]
+
+            $ps.EndInvoke($handle)
+
+            $ps.Dispose()
+        }
+    }
+    End {
+        $rsp.Close()
+    }
+}
+
 task install-chocolatey {
     # Install Chocolatey if not already
     try {
@@ -29,10 +85,7 @@ task winutils {
 }
 
 task choco-pack {
-    Get-ChildItem -Path $ChocoPackagesDir -Filter "*.nuspec" -File -Recurse |
-        ForEach-Object {
-            choco pack "$($_.FullName)" --outputdirectory "$ChocoOutputDir"
-        }
+    chocoPack -Root $ChocoPackagesDir -OutputDirectory $ChocoOutputDir -Parallel
 }
 
 task choco-install {
