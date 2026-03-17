@@ -1,0 +1,1 @@
+. ./setup/init.build.ps1
