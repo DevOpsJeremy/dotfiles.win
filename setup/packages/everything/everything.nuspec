@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>everything</id>
+    <version>1.4.1.1032</version>
+
+    <title>everything (Install)</title>
+    <authors>Jeremy Watkins</authors>
+    <projectUrl>https://github.com/DevOpsJeremy/dotfiles.win</projectUrl>
+    <tags>everything</tags>
+    <summary>Locate files and folders by name instantly.</summary>
+    <description>"Everything" is search engine that locates files and folders by filename instantly for Windows.</description>
+  </metadata>
+  <files>
+    <file src="tools/**" target="tools" />
+  </files>
+</package>
